@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 
 import { removeDuplicates } from "../helpers/utils";
-import { capitalizarEntida } from "../helpers/capitalizarUtils";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
   const [roles, setRoles] = useState(initialRoles);
   const [permisos, setPermisos] = useState(initialPermissions);
-  const [permissionsMap, setPermissionsMap] = useState([]);
+  const [permisosMap, setPermisosMap] = useState([]);
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
