@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { removeDuplicates } from "../helpers/utils";
 
@@ -46,6 +46,25 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     });
   };
 
+  const getPermissionsMap = useCallback(() => {
+    const pMap = [];
+    const entities = getEntities();
+    entities.forEach((entity) => {
+      const permissions = getEntityPermissions(entity);
+      permissions.forEach((p) => {
+        pMap.push(`${entity}:${p}`);
+      });
+    });
+    return pMap;
+  }, [roles, permisos]);
+
+  useEffect(() => {
+    if (roles.length > 0) {
+      const pMap = getPermissionsMap();
+      setPermisosMap(pMap);
+    }
+  }, [roles, getPermissionsMap, permisos]);
+
   return (
     <div>
       <table border="1">
@@ -62,7 +81,10 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
             <tr key={role.id}>
               <td>{role.name}</td>
               {/* Iterar sobre los permisos para crear las celdas*/}
-              
+              {permisosMap.map((p, i) => {
+                const exist = role?.permissions?.includes(p);
+                return <td key={i}>{exist ? "X" : ""}</td>;
+              })}
             </tr>
           ))}
         </tbody>
