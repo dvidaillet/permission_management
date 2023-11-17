@@ -12,20 +12,37 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   const getEntities = () =>
     removeDuplicates(permisos?.map((el) => el.split(":")[0]));
 
-  // funcion para contar la cantidad de elementos del arreglo de permisos
+  // funcion para contar la cantidad de permisos de una entidad especificada
   const getEntityPermissionCount = (entity) =>
     permisos.filter((el) => el?.startsWith(`${entity}:`)).length;
+
+  //funcion para obtener los permisos por entidad
+  const getEntityPermissions = (entidad) =>
+    permisos
+      .filter((el) => el.startsWith(`${entidad}:`))
+      .map((el) => el.split(":")[1]);
 
   //funcion para renderizar un ecabezado con los nombres de las entidades
   const renderEntities = () => {
     const entidades = getEntities();
     return entidades.map((entidad, i) => {
-      const permisosCount = getEntityPermissionCount(entidad);      
+      //obtengo cantidad de permisos para cada entidad para establecer ancho de la columna
+      const permisosCount = getEntityPermissionCount(entidad);
       return (
+        //establesco ancho de la columna
         <th key={i} colSpan={permisosCount}>
           {entidad}
         </th>
       );
+    });
+  };
+
+  //funcion para mostrar los permisos en los encabezados por entidad
+  const renderEntitiesPermissions = () => {
+    const entidades = removeDuplicates(permisos?.map((el) => el.split(":")[0]));
+    return entidades.map((entidad) => {
+      const permisos = getEntityPermissions(entidad);
+      return permisos.map((p, i) => <th key={i}>{p}</th>);
     });
   };
 
@@ -37,6 +54,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
             <th rowSpan="2">Roles</th>
             {renderEntities()}
           </tr>
+          <tr>{renderEntitiesPermissions()}</tr>
         </thead>
         <tbody></tbody>
       </table>
