@@ -85,8 +85,19 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
                 const exist = role?.permissions?.includes(p);
                 return <td key={i}>{exist ? "X" : ""}</td>;
               })}
+              <td>
+                <button>+</button>
+              </td>
             </tr>
           ))}
+
+          {/* Add the row for adding a new role */}
+          <tr>
+            <td colSpan={permisos.length + 1}>
+              {/* Your input field for adding a new role */}
+              <input type="text" placeholder="Add Role" />
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
