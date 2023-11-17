@@ -1,12 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import { removeDuplicates } from "../helpers/utils";
+import { isValidPermission } from "../helpers/validationUtils";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
   const [roles, setRoles] = useState(initialRoles);
   const [permisos, setPermisos] = useState(initialPermissions);
   const [permisosMap, setPermisosMap] = useState([]);
+
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [nuevoPermiso, setNuevoPermiso] = useState("");
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
@@ -65,6 +69,28 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     }
   }, [roles, getPermissionsMap, permisos]);
 
+  //codigo para agregar nuevo permiso
+  const openModal = () => {
+    setMostrarModal(true);
+  };
+
+  const closeModal = () => {
+    setMostrarModal(false);
+  };
+
+  // Implementa la lógica para agregar un nuevo permiso con el nombre ingresado
+  const handleOkButtonClick = () => {
+    //TODO:Validar que si la entidad existe no cree una nueva 
+    //y coloque el permiso en la entidad correpondiente
+    if (!isValidPermission(nuevoPermiso)) {
+      setNuevoPermiso("");
+      return;
+    }
+    setPermisos([...permisos, nuevoPermiso]);
+    closeModal();
+  };
+  //------------------------------------------
+
   return (
     <div>
       <table border="1">
@@ -86,20 +112,38 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
                 return <td key={i}>{exist ? "X" : ""}</td>;
               })}
               <td>
-                <button>+</button>
+                <button onClick={openModal}>+</button>
               </td>
             </tr>
           ))}
 
-          {/* Add the row for adding a new role */}
+          {/* adicionando fila para agregar nuevo Rol */}
           <tr>
             <td colSpan={permisos.length + 1}>
-              {/* Your input field for adding a new role */}
               <input type="text" placeholder="Add Role" />
             </td>
           </tr>
         </tbody>
       </table>
+
+      {/* Modal */}
+      {mostrarModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={closeModal}>
+              &times;
+            </span>
+            <label>Nuevo Permiso:</label>
+            <input
+              type="text"
+              placeholder="ej: PROJECT:WRITE"
+              value={nuevoPermiso}
+              onChange={(e) => setNuevoPermiso(e.target.value)}
+            />
+            <button onClick={handleOkButtonClick}>OK</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
