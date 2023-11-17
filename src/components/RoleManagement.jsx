@@ -7,6 +7,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
   const [roles, setRoles] = useState(initialRoles);
   const [permisos, setPermisos] = useState(initialPermissions);
+  const [permissionsMap, setPermissionsMap] = useState([]);
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
@@ -56,7 +57,16 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
           </tr>
           <tr>{renderEntitiesPermissions()}</tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+          {/* Iterando sobre los roles para crear las filas */}
+          {roles.map((role) => (
+            <tr key={role.id}>
+              <td>{role.name}</td>
+              {/* Iterar sobre los permisos para crear las celdas*/}
+              
+            </tr>
+          ))}
+        </tbody>
       </table>
     </div>
   );
