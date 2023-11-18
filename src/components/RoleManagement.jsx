@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { removeDuplicates } from "../helpers/utils";
+import { removeDuplicates, getPermissionValues } from "../helpers/utils";
 import { isValidPermission } from "../helpers/validationUtils";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
@@ -80,7 +80,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
   // Implementa la lógica para agregar un nuevo permiso con el nombre ingresado
   const handleOkButtonClick = () => {
-    //TODO:Validar que si la entidad existe no cree una nueva 
+    //TODO:Validar que si la entidad existe no cree una nueva
     //y coloque el permiso en la entidad correpondiente
     if (!isValidPermission(nuevoPermiso)) {
       setNuevoPermiso("");
@@ -90,6 +90,22 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     closeModal();
   };
   //------------------------------------------
+
+  //implementa lagica para agregar un nuevo permiso
+  const addNewRole = (rolName) => {
+    //TODO:Validar bien que READ este en el lado de los permisos
+    const readPermissions = getPermissionValues(permisos).filter((p) =>
+      p.includes("READ")
+    );
+
+    const newRole = {
+      id: "2", //TODO:Asignar nuevo ID compatible con mongodb
+      name: rolName,
+      permissions: readPermissions,
+    };
+
+    return [...roles, newRole];
+  };
 
   return (
     <div>
