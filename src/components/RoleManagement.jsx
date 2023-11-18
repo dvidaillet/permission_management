@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import { removeDuplicates, getPermissionValues } from "../helpers/utils";
+import { removeDuplicates } from "../helpers/utils";
 import { isValidPermission } from "../helpers/validationUtils";
+
+import "./RoleManagement.css";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
@@ -102,9 +104,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
   const addNewRole = (e) => {
     //TODO:Validar bien que READ este en el lado de los permisos
-    const readPermissions = permisos.filter((p) =>
-      p.includes("READ")
-    );
+    const readPermissions = permisos.filter((p) => p.includes("READ"));
 
     const newRole = {
       id: "2", //TODO:Asignar nuevo ID compatible con mongodb
@@ -112,12 +112,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       permissions: readPermissions,
     };
 
-    setRoles([...roles,newRole]) ;
+    setRoles([...roles, newRole]);
   };
 
   return (
-    <div>
-      <table border="1">
+    <div >
+      <table className="center">
         <thead>
           <tr>
             <th rowSpan="2">Roles</th>
@@ -148,7 +148,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
                 type="text"
                 placeholder="Add Role"
                 onChange={(e) => setNombreNuevoRole(e.target.value)}
-                onKeyDown={handleEnterPress}
+                onKeyDown={handleEnterPress}                
               />
             </td>
           </tr>

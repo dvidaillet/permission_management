@@ -1,0 +1,70 @@
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: center;
+}
+
+div {
+  padding-top: 2rem;
+  overflow-x: auto;
+  overflow-y: auto;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f2f2f2;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  th:first-child {
+    /* Fijar la primera columna */
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background-color: #fff;
+  }
+
+  td:first-child {
+    /* Fijar la primera columna */
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background-color: #fff;
+  }
+
+  td, th {
+    min-width: 100px; /* Ancho mínimo para las celdas, ajusta según sea necesario */
+  }
+
+  .tabla-container {
+    width: 100%;
+    overflow: auto;
+    max-height: 300px; /* Altura máxima de la tabla, ajusta según sea necesario */
+    
+  }
