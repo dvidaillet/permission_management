@@ -11,6 +11,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevoPermiso, setNuevoPermiso] = useState("");
+  const [nombreNuevoRole, setNombreNuevoRole] = useState("");
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
@@ -92,19 +93,26 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //------------------------------------------
 
   //implementa lagica para agregar un nuevo permiso
-  const addNewRole = (rolName) => {
+  const handleEnterPress = (e) => {
+    console.log(e.key);
+    if (e.key === "Enter" && nombreNuevoRole.trim() !== "") {
+      addNewRole();
+    }
+  };
+
+  const addNewRole = (e) => {
     //TODO:Validar bien que READ este en el lado de los permisos
-    const readPermissions = getPermissionValues(permisos).filter((p) =>
+    const readPermissions = permisos.filter((p) =>
       p.includes("READ")
     );
 
     const newRole = {
       id: "2", //TODO:Asignar nuevo ID compatible con mongodb
-      name: rolName,
+      name: nombreNuevoRole,
       permissions: readPermissions,
     };
 
-    return [...roles, newRole];
+    setRoles([...roles,newRole]) ;
   };
 
   return (
@@ -136,7 +144,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
           {/* adicionando fila para agregar nuevo Rol */}
           <tr>
             <td colSpan={permisos.length + 1}>
-              <input type="text" placeholder="Add Role" />
+              <input
+                type="text"
+                placeholder="Add Role"
+                onChange={(e) => setNombreNuevoRole(e.target.value)}
+                onKeyDown={handleEnterPress}
+              />
             </td>
           </tr>
         </tbody>
