@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { removeDuplicates } from "../helpers/utils";
 import { isValidPermission } from "../helpers/validationUtils";
-import { procesarEntidad, procesarPermisos } from "../helpers/capitalizarUtils";
+import { capitalizarEntidad, capitalizarPermiso } from "../helpers/capitalizarUtils";
 
 import "./RoleManagement.css";
 
@@ -36,13 +36,11 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
     return entidades.map((entidad, i) => {
       //obtengo cantidad de permisos para cada entidad para establecer ancho de la columna
-      const permisosCount = getEntityPermissionCount(entidad);
-      // Capitalizo el nombre de la entidad
-      let entidadCapitalizada = procesarEntidad(entidad);
+      const permisosCount = getEntityPermissionCount(entidad);      
       return (
         //establesco ancho de la columna
         <th key={i} colSpan={permisosCount}>
-          {entidadCapitalizada}
+          {capitalizarEntidad(entidad)}
         </th>
       );
     });
@@ -53,7 +51,10 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     const entidades = removeDuplicates(permisos?.map((el) => el.split(":")[0]));
     return entidades.map((entidad) => {
       const permisos = getEntityPermissions(entidad);
-      return permisos.map((p, i) => <th key={i}>{p}</th>);
+      return permisos.map((p, i) => {
+        const permisoCapitalizado = capitalizarPermiso(p);
+        return <th key={i}>{permisoCapitalizado}</th>;
+      });
     });
   };
 
@@ -131,9 +132,9 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
         </thead>
         <tbody>
           {/* Iterando sobre los roles para crear las filas */}
-          {roles.map((role) => (
-            <tr key={role.id}>
-              <td>{role.name}</td>
+          {roles.map((role) => (            
+            <tr key={role.id}>                          
+              <td>{capitalizarEntidad(role.name)}</td>
               {/* Iterar sobre los permisos para crear las celdas*/}
               {permisosMap.map((p, i) => {
                 const exist = role?.permissions?.includes(p);
