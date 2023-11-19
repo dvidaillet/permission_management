@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useCallback, useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 import { removeDuplicates } from "../helpers/utils";
 import { isValidPermission } from "../helpers/validationUtils";
@@ -80,7 +81,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   };
 
   const handleCheckboxChangeEntidad = (entidad) => {
-    console.log(entidad);
     let updatedRoles = [];
     if (!entidadCheked) {
       updatedRoles = (roles) => {
@@ -96,10 +96,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       };
     } else {
       const entityPermissions = permisos.filter((p) => p.startsWith(entidad));
-      console.log(
-        "🚀 - handleCheckboxChangeEntidad - entityPermissions:",
-        entityPermissions
-      );
 
       updatedRoles = (roles) => {
         const filteredRoles = [...roles].map((rol) => {
@@ -219,18 +215,8 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   }, [roles, getPermissionsMap, permisos]);
 
   //codigo para agregar nuevo permiso
-  const openModal = () => {
-    setMostrarModal(true);
-  };
-
-  const closeModal = () => {
-    setMostrarModal(false);
-  };
-
   // Implementa la lógica para agregar un nuevo permiso con el nombre ingresado
   const handleOkButtonClick = () => {
-    //TODO:Validar que si la entidad existe no cree una nueva
-    //y coloque el permiso en la entidad correpondiente
     if (!isValidPermission(nuevoPermiso)) {
       setNuevoPermiso("");
       return;
@@ -263,14 +249,13 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       return;
     }
 
-    //TODO:Validar bien que READ este en el lado de los permisos
-    const readPermissions = permisos.filter((p) => p.includes("READ"));
-
+    const readPermissions = [...permisos].filter((p) => p.includes("READ"));    
     const newRole = {
-      id: "2", //TODO:Asignar nuevo ID compatible con mongodb
+      id: uuidv4(),
       name: nombreNuevoRole,
       permissions: readPermissions,
     };
+    console.log("🚀 - addNewRole - newRole:", newRole)
 
     setRoles([...roles, newRole]);
     setNombreNuevoRole("");
@@ -294,6 +279,15 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   const borrarRol = (rol) => {
     const newRoles = [...roles].filter((r) => r !== rol);
     setRoles(newRoles);
+  };
+
+  //eventos del modal
+  const openModal = () => {
+    setMostrarModal(true);
+  };
+
+  const closeModal = () => {
+    setMostrarModal(false);
   };
 
   //funciones para manejar los eventos del mouse
