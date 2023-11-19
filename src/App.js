@@ -5,10 +5,10 @@ function App() {
   const initialRoles = [
     {
       id: "1",
-      name: "Admin",
+      name: "ADMIN",
       permissions: ["PROJECT:WRITE", "STORE:READ", "ACCOUNT:READ_ACCESS"],
     },
-    { id: "2", name: "Editor", permissions: ["PROJECT:READ", "STORE:WRITE"] },
+    { id: "2", name: "USER", permissions: ["PROJECT:READ", "STORE:WRITE"] },
   ];
 
   //arreglo de permisos inicales

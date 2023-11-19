@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { removeDuplicates } from "../helpers/utils";
 import { isValidPermission } from "../helpers/validationUtils";
+import { procesarEntidad, procesarPermisos } from "../helpers/capitalizarUtils";
 
 import "./RoleManagement.css";
 
@@ -32,13 +33,16 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //funcion para renderizar un ecabezado con los nombres de las entidades
   const renderEntities = () => {
     const entidades = getEntities();
+
     return entidades.map((entidad, i) => {
       //obtengo cantidad de permisos para cada entidad para establecer ancho de la columna
       const permisosCount = getEntityPermissionCount(entidad);
+      // Capitalizo el nombre de la entidad
+      let entidadCapitalizada = procesarEntidad(entidad);
       return (
         //establesco ancho de la columna
         <th key={i} colSpan={permisosCount}>
-          {entidad}
+          {entidadCapitalizada}
         </th>
       );
     });
@@ -116,7 +120,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   };
 
   return (
-    <div >
+    <div>
       <table className="center">
         <thead>
           <tr>
@@ -148,7 +152,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
                 type="text"
                 placeholder="Add Role"
                 onChange={(e) => setNombreNuevoRole(e.target.value)}
-                onKeyDown={handleEnterPress}                
+                onKeyDown={handleEnterPress}
               />
             </td>
           </tr>
