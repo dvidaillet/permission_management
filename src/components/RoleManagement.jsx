@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useState } from "react";
 
 import { removeDuplicates } from "../helpers/utils";
 import { isValidPermission } from "../helpers/validationUtils";
-import { capitalizarEntidad, capitalizarPermiso } from "../helpers/capitalizarUtils";
+import {
+  capitalizarEntidad,
+  capitalizarPermiso,
+} from "../helpers/capitalizarUtils";
 
 import "./RoleManagement.css";
 
@@ -36,7 +39,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
     return entidades.map((entidad, i) => {
       //obtengo cantidad de permisos para cada entidad para establecer ancho de la columna
-      const permisosCount = getEntityPermissionCount(entidad);      
+      const permisosCount = getEntityPermissionCount(entidad);
       return (
         //establesco ancho de la columna
         <th key={i} colSpan={permisosCount}>
@@ -101,13 +104,18 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
   //implementa lagica para agregar un nuevo permiso
   const handleEnterPress = (e) => {
-    console.log(e.key);
     if (e.key === "Enter" && nombreNuevoRole.trim() !== "") {
       addNewRole();
     }
   };
 
-  const addNewRole = (e) => {
+  const addNewRole = (e) => {   
+    const existe = roles.some((rol) => rol.name === nombreNuevoRole);
+    if (existe) {
+      setNombreNuevoRole("");
+      return;
+    }
+
     //TODO:Validar bien que READ este en el lado de los permisos
     const readPermissions = permisos.filter((p) => p.includes("READ"));
 
@@ -118,6 +126,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     };
 
     setRoles([...roles, newRole]);
+    setNombreNuevoRole("");
   };
 
   return (
@@ -132,8 +141,8 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
         </thead>
         <tbody>
           {/* Iterando sobre los roles para crear las filas */}
-          {roles.map((role) => (            
-            <tr key={role.id}>                          
+          {roles.map((role) => (
+            <tr key={role.id}>
               <td>{capitalizarEntidad(role.name)}</td>
               {/* Iterar sobre los permisos para crear las celdas*/}
               {permisosMap.map((p, i) => {
@@ -152,6 +161,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
               <input
                 type="text"
                 placeholder="Add Role"
+                value={nombreNuevoRole}
                 onChange={(e) => setNombreNuevoRole(e.target.value)}
                 onKeyDown={handleEnterPress}
               />
