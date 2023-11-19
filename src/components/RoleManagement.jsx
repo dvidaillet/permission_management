@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useCallback, useEffect, useState } from "react";
 
 import { removeDuplicates } from "../helpers/utils";
@@ -8,6 +9,7 @@ import {
 } from "../helpers/capitalizarUtils";
 
 import "./RoleManagement.css";
+import papeleraIcon from "../papelera.png";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
@@ -18,6 +20,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nuevoPermiso, setNuevoPermiso] = useState("");
   const [nombreNuevoRole, setNombreNuevoRole] = useState("");
+  //states para mostrar los iconos de las celdas
+  const [mostrarIconosEntidad, setMostrarIconosEntidad] = useState(false);
+  const [mostrarIconosRol, setMostrarIconosRol] = useState(false);
+  const [mostrarIconosPermiso, setMostrarIconosPermiso] = useState(false);
+  //states para verificar los check
+  const [rolCheked, setRolCheked] = useState(false);
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
@@ -45,12 +53,32 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
         <th
           key={i}
           colSpan={permisosCount}
-          onMouseOver={() => borrarEntidad(entidad)}
+          onMouseEnter={() => handleMouseEnter()}
+          onMouseLeave={() => handleMouseLeave()}
         >
-          {capitalizarEntidad(entidad)}
+          {mostrarIconosEntidad ? (
+            <>
+              <input
+                type="checkbox"
+                onChange={() => handleCheckboxChange(entidad)}
+              />
+              {capitalizarEntidad(entidad)}
+              <img
+                className="icono-papelera"
+                src={papeleraIcon}
+                onClick={() => borrarEntidad(entidad)}
+              />
+            </>
+          ) : (
+            capitalizarEntidad(entidad)
+          )}
         </th>
       );
     });
+  };
+
+  const handleCheckboxChange = (role) => {
+    console.log(role);
   };
 
   const borrarEntidad = (entidad) => {
@@ -65,17 +93,16 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       return permisos.map((p, i) => {
         const permisoCapitalizado = capitalizarPermiso(p);
         return (
-          <th key={i} onMouseOver={() => borrarPermiso(p, entidad)}>
+          <th
+            key={i}
+            onMouseEnter={() => handleMouseEnterPermiso()}
+            onMouseLeave={() => handleMouseLeavePermiso()}
+          >
             {permisoCapitalizado}
           </th>
         );
       });
     });
-  };
-
-  const borrarPermiso = (permiso, entidad) => {
-    console.log("🚀 - borrarPermiso - entidad:", entidad);
-    console.log("🚀 - borrarPermiso - permiso:", permiso);
   };
 
   const getPermissionsMap = useCallback(() => {
@@ -119,7 +146,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   };
   //------------------------------------------
 
-  //implementa lagica para agregar un nuevo permiso
+  //implementa lagica para agregar un nuevo rol
   const handleEnterPress = (e) => {
     if (e.key === "Enter" && nombreNuevoRole.trim() !== "") {
       addNewRole();
@@ -146,8 +173,46 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     setNombreNuevoRole("");
   };
 
+  const handleCheckboxChangeRol = (rol) => {
+    const updatedRol = {
+      ...rol,
+      permissions: rolCheked ? [] : permisos,
+    };
+
+    const updatedRoles = roles.map((r) =>
+      r.name === rol.name ? updatedRol : r
+    );
+
+    setRolCheked(!rolCheked);
+    setRoles(updatedRoles);
+  };
+
+  //funcion para eliminar un rol
   const borrarRol = (rol) => {
-    console.log("🚀 - borrarRol - rol:", rol);
+    const newRoles = [...roles].filter((r) => r !== rol);
+    setRoles(newRoles);
+  };
+
+  //funciones para manejar los eventos del mouse
+  const handleMouseEnter = () => {
+    setMostrarIconosEntidad(true);
+  };
+  const handleMouseLeave = () => {
+    setMostrarIconosEntidad(false);
+  };
+
+  const handleMouseEnterRol = () => {
+    setMostrarIconosRol(true);
+  };
+  const handleMouseLeaveRol = () => {
+    setMostrarIconosRol(false);
+  };
+
+  const handleMouseEnterPermiso = () => {
+    setMostrarIconosPermiso(true);
+  };
+  const handleMouseLeavePermiso = () => {
+    setMostrarIconosPermiso(false);
   };
 
   return (
@@ -164,13 +229,39 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
           {/* Iterando sobre los roles para crear las filas */}
           {roles.map((role) => (
             <tr key={role.id}>
-              <td onMouseOver={()=>borrarRol(role)}>
-                {capitalizarEntidad(role.name)}
+              <td
+                onMouseEnter={() => handleMouseEnterRol()}
+                onMouseLeave={() => handleMouseLeaveRol()}
+              >
+                {mostrarIconosRol ? (
+                  <>
+                    <input
+                      type="checkbox"
+                      onChange={() => handleCheckboxChangeRol(role)}
+                    />
+                    {capitalizarEntidad(role.name)}
+                    <img
+                      className="icono-papelera"
+                      src={papeleraIcon}
+                      onClick={() => borrarRol(role)}
+                    />
+                  </>
+                ) : (
+                  capitalizarEntidad(role.name)
+                )}
               </td>
               {/* Iterar sobre los permisos para crear las celdas*/}
               {permisosMap.map((p, i) => {
                 const exist = role?.permissions?.includes(p);
-                return <td key={i}>{exist ? "X" : ""}</td>;
+                return (
+                  <td
+                    key={i}
+                    onMouseEnter={() => handleMouseEnterPermiso()}
+                    onMouseLeave={() => handleMouseLeavePermiso()}
+                  >
+                    {exist ? "X" : ""}
+                  </td>
+                );
               })}
               <td>
                 <button onClick={openModal}>+</button>
