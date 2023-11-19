@@ -27,6 +27,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //states para verificar los check
   const [rolCheked, setRolCheked] = useState(false);
   const [permisoCheked, setPermisoCheked] = useState(false);
+  const [entidadCheked, setEntidadCheked] = useState(false);
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
@@ -80,6 +81,44 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
   const handleCheckboxChangeEntidad = (entidad) => {
     console.log(entidad);
+    let updatedRoles = [];
+    if (!entidadCheked) {
+      updatedRoles = (roles) => {
+        const filteredRoles = [...roles].map((rol) => {
+          const filteredPermissions = rol.permissions.filter(
+            (permission) => !permission.startsWith(entidad)
+          );
+
+          return { ...rol, permissions: filteredPermissions };
+        });
+
+        return filteredRoles;
+      };
+    } else {
+      const entityPermissions = permisos.filter((p) => p.startsWith(entidad));
+      console.log(
+        "🚀 - handleCheckboxChangeEntidad - entityPermissions:",
+        entityPermissions
+      );
+
+      updatedRoles = (roles) => {
+        const filteredRoles = [...roles].map((rol) => {
+          const filteredPermissions = rol.permissions.filter(
+            (permission) => !permission.startsWith(entidad)
+          );
+
+          return {
+            ...rol,
+            permissions: [...filteredPermissions, ...entityPermissions],
+          };
+        });
+
+        return filteredRoles;
+      };
+    }
+
+    setRoles(updatedRoles);
+    setEntidadCheked(!entidadCheked);
   };
 
   const borrarEntidad = (entidad) => {
