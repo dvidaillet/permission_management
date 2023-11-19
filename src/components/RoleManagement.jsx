@@ -42,11 +42,19 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       const permisosCount = getEntityPermissionCount(entidad);
       return (
         //establesco ancho de la columna
-        <th key={i} colSpan={permisosCount}>
+        <th
+          key={i}
+          colSpan={permisosCount}
+          onMouseOver={() => borrarEntidad(entidad)}
+        >
           {capitalizarEntidad(entidad)}
         </th>
       );
     });
+  };
+
+  const borrarEntidad = (entidad) => {
+    console.log("🚀 - borrarEntidad - entidad:", entidad);
   };
 
   //funcion para mostrar los permisos en los encabezados por entidad
@@ -56,9 +64,18 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       const permisos = getEntityPermissions(entidad);
       return permisos.map((p, i) => {
         const permisoCapitalizado = capitalizarPermiso(p);
-        return <th key={i}>{permisoCapitalizado}</th>;
+        return (
+          <th key={i} onMouseOver={() => borrarPermiso(p, entidad)}>
+            {permisoCapitalizado}
+          </th>
+        );
       });
     });
+  };
+
+  const borrarPermiso = (permiso, entidad) => {
+    console.log("🚀 - borrarPermiso - entidad:", entidad);
+    console.log("🚀 - borrarPermiso - permiso:", permiso);
   };
 
   const getPermissionsMap = useCallback(() => {
@@ -109,7 +126,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     }
   };
 
-  const addNewRole = (e) => {   
+  const addNewRole = (e) => {
     const existe = roles.some((rol) => rol.name === nombreNuevoRole);
     if (existe) {
       setNombreNuevoRole("");
@@ -129,6 +146,10 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     setNombreNuevoRole("");
   };
 
+  const borrarRol = (rol) => {
+    console.log("🚀 - borrarRol - rol:", rol);
+  };
+
   return (
     <div>
       <table className="center">
@@ -143,7 +164,9 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
           {/* Iterando sobre los roles para crear las filas */}
           {roles.map((role) => (
             <tr key={role.id}>
-              <td>{capitalizarEntidad(role.name)}</td>
+              <td onMouseOver={()=>borrarRol(role)}>
+                {capitalizarEntidad(role.name)}
+              </td>
               {/* Iterar sobre los permisos para crear las celdas*/}
               {permisosMap.map((p, i) => {
                 const exist = role?.permissions?.includes(p);
