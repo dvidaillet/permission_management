@@ -26,6 +26,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   const [mostrarIconosPermiso, setMostrarIconosPermiso] = useState(false);
   //states para verificar los check
   const [rolCheked, setRolCheked] = useState(false);
+  const [permisoCheked, setPermisoCheked] = useState(false);
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
@@ -60,7 +61,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
             <>
               <input
                 type="checkbox"
-                onChange={() => handleCheckboxChange(entidad)}
+                onChange={() => handleCheckboxChangeEntidad(entidad)}
               />
               {capitalizarEntidad(entidad)}
               <img
@@ -77,12 +78,51 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     });
   };
 
-  const handleCheckboxChange = (role) => {
-    console.log(role);
+  const handleCheckboxChangeEntidad = (entidad) => {
+    console.log(entidad);
   };
 
   const borrarEntidad = (entidad) => {
-    console.log("🚀 - borrarEntidad - entidad:", entidad);
+    const updatedPermissions = permisos.filter(
+      (permiso) => !permiso.includes(entidad)
+    );
+    setPermisos(updatedPermissions);
+  };
+
+  const handleCheckboxChangePermiso = (permiso, entidad) => {
+    const nombreFull = `${entidad}:${permiso}`;
+
+    if (!permisoCheked) {
+      const updateRoles = roles.map((rol) => {
+        const updatePermissions = rol.permissions.filter(
+          (permiso) => permiso !== nombreFull
+        );
+        return { ...rol, permissions: updatePermissions };
+      });
+      setRoles(updateRoles);
+    } else {
+      const updateRoles = roles.map((rol) => {
+        // Verificar si el permiso ya existe en el arreglo de permissions
+        if (!rol.permissions.includes(nombreFull)) {
+          const nuevosPermisos = [...rol.permissions, nombreFull];
+          return { ...rol, permissions: nuevosPermisos };
+        } else {
+          // Si el permiso ya existe, devolver el rol sin cambios
+          return rol;
+        }
+      });
+      setRoles(updateRoles);
+    }
+
+    setPermisoCheked(!permisoCheked);
+  };
+
+  const borrarPermiso = (permiso, entidad) => {
+    const nombreFull = `${entidad}:${permiso}`;
+    const updatedPermissions = permisos.filter(
+      (permiso) => !permiso.includes(nombreFull)
+    );
+    setPermisos(updatedPermissions);
   };
 
   //funcion para mostrar los permisos en los encabezados por entidad
@@ -98,7 +138,22 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
             onMouseEnter={() => handleMouseEnterPermiso()}
             onMouseLeave={() => handleMouseLeavePermiso()}
           >
-            {permisoCapitalizado}
+            {mostrarIconosPermiso ? (
+              <>
+                <input
+                  type="checkbox"
+                  onChange={() => handleCheckboxChangePermiso(p, entidad)}
+                />
+                {permisoCapitalizado}
+                <img
+                  className="icono-papelera"
+                  src={papeleraIcon}
+                  onClick={() => borrarPermiso(p, entidad)}
+                />
+              </>
+            ) : (
+              permisoCapitalizado
+            )}
           </th>
         );
       });

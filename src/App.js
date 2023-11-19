@@ -9,6 +9,7 @@ function App() {
       permissions: ["PROJECT:WRITE", "STORE:READ", "ACCOUNT:READ_ACCESS"],
     },
     { id: "2", name: "USER", permissions: ["PROJECT:READ", "STORE:WRITE"] },
+    { id: "3", name: "EDIT", permissions: ["PROJECT:READ", "STORE:WRITE"] },
   ];
 
   //arreglo de permisos inicales
