@@ -196,6 +196,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       setNuevoPermiso("");
       return;
     }
+    const existe = permisos.includes(nuevoPermiso);
+    if (existe) {
+      alert("Este permiso ya existe");
+      setNuevoPermiso("");
+      return;
+    }
     setPermisos([...permisos, nuevoPermiso]);
     closeModal();
   };
@@ -209,8 +215,11 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   };
 
   const addNewRole = (e) => {
-    const existe = roles.some((rol) => rol.name === nombreNuevoRole);
+    const existe = roles.some(
+      (rol) => rol.name.toLowerCase() === nombreNuevoRole.toLowerCase()
+    );
     if (existe) {
+      alert("Ya existe un rol con este nombre");
       setNombreNuevoRole("");
       return;
     }
