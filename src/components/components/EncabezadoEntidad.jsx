@@ -87,6 +87,7 @@ const EncabezadoEntidad = ({
             <img
               className="icono-papelera"
               src={papeleraIcon}
+              alt="Eliminar"
               onClick={() => borrarEntidad(entidad)}
             />
           </div>

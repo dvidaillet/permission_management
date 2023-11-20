@@ -3,16 +3,15 @@ import React, { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { removeDuplicates } from "../helpers/utils";
-import { isValidPermission } from "../helpers/validationUtils";
-import {
-  capitalizarEntidad,
-  capitalizarPermiso,
-} from "../helpers/capitalizarUtils";
+
+import { capitalizarEntidad } from "../helpers/capitalizarUtils";
 
 import "./RoleManagement.css";
 import papeleraIcon from "../papelera.png";
 import Celdas from "./components/Celdas";
 import EncabezadoEntidad from "./components/EncabezadoEntidad";
+import EncabezadoPermizo from "./components/EncabezadoPermiso";
+import Modal from "./components/Modal";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
@@ -21,15 +20,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   const [permisosMap, setPermisosMap] = useState([]);
 
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [nuevoPermiso, setNuevoPermiso] = useState("");
   const [nombreNuevoRole, setNombreNuevoRole] = useState("");
   //states para mostrar los iconos de las celdas
   const [mostrarIconosRol, setMostrarIconosRol] = useState(false);
-  const [mostrarIconosPermiso, setMostrarIconosPermiso] = useState(false);
   //states para verificar los check
   const [rolCheked, setRolCheked] = useState(false);
-  const [permisoCheked, setPermisoCheked] = useState(false);
-  
+
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
     removeDuplicates(permisos?.map((el) => el.split(":")[0]));
@@ -65,77 +61,22 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     });
   };
 
-  const handleCheckboxChangePermiso = (permiso, entidad) => {
-    const nombreFull = `${entidad}:${permiso}`;
-
-    if (permisoCheked) {
-      const updateRoles = roles.map((rol) => {
-        const updatePermissions = rol.permissions.filter(
-          (permiso) => permiso !== nombreFull
-        );
-        return { ...rol, permissions: updatePermissions };
-      });
-      setRoles(updateRoles);
-    } else {
-      const updateRoles = roles.map((rol) => {
-        // Verificar si el permiso ya existe en el arreglo de permissions
-        if (!rol.permissions.includes(nombreFull)) {
-          const nuevosPermisos = [...rol.permissions, nombreFull];
-          return { ...rol, permissions: nuevosPermisos };
-        } else {
-          // Si el permiso ya existe, devolver el rol sin cambios
-          return rol;
-        }
-      });
-      setRoles(updateRoles);
-    }
-
-    setPermisoCheked(!permisoCheked);
-  };
-
-  const borrarPermiso = (permiso, entidad) => {
-    const nombreFull = `${entidad}:${permiso}`;
-    const updatedPermissions = permisos.filter(
-      (permiso) => !permiso.includes(nombreFull)
-    );
-    setPermisos(updatedPermissions);
-  };
-
   //funcion para mostrar los permisos en los encabezados por entidad
   const renderEntitiesPermissions = () => {
     const entidades = removeDuplicates(permisos?.map((el) => el.split(":")[0]));
     return entidades.map((entidad) => {
       const permisos = getEntityPermissions(entidad);
       return permisos.map((p, i) => {
-        const permisoCapitalizado = capitalizarPermiso(p);
         return (
-          <th
+          <EncabezadoPermizo
             key={i}
-            onMouseEnter={() => handleMouseEnterPermiso()}
-            onMouseLeave={() => handleMouseLeavePermiso()}
-          >
-            {mostrarIconosPermiso ? (
-              <div className="celdas">
-                <div>
-                  <input
-                    type="checkbox"
-                    name="ceckbocxPermiso"
-                    onChange={() => handleCheckboxChangePermiso(p, entidad)}
-                  />
-                  {permisoCapitalizado}
-                </div>
-                <div>
-                  <img
-                    className="icono-papelera"
-                    src={papeleraIcon}
-                    onClick={() => borrarPermiso(p, entidad)}
-                  />
-                </div>
-              </div>
-            ) : (
-              permisoCapitalizado
-            )}
-          </th>
+            p={p}
+            roles={roles}
+            entidad={entidad}
+            permisos={permisos}
+            setRoles={setRoles}
+            setPermisos={setPermisos}
+          />
         );
       });
     });
@@ -159,25 +100,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       setPermisosMap(pMap);
     }
   }, [roles, getPermissionsMap, permisos]);
-
-  //codigo para agregar nuevo permiso
-  // Implementa la lógica para agregar un nuevo permiso con el nombre ingresado
-  const handleOkButtonClick = () => {
-    if (!isValidPermission(nuevoPermiso)) {
-      setNuevoPermiso("");
-      return;
-    }
-    const existe = permisos.includes(nuevoPermiso);
-    if (existe) {
-      alert("Este permiso ya existe");
-      setNuevoPermiso("");
-      return;
-    }
-    setPermisos([...permisos, nuevoPermiso]);
-    setNuevoPermiso("");
-    closeModal();
-  };
-  //------------------------------------------
 
   //implementa lagica para agregar un nuevo rol
   const handleEnterPress = (e) => {
@@ -232,23 +154,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     setMostrarModal(true);
   };
 
-  const closeModal = () => {
-    setMostrarModal(false);
-  };
-
   //funciones para manejar los eventos del mouse
   const handleMouseEnterRol = () => {
     setMostrarIconosRol(true);
   };
   const handleMouseLeaveRol = () => {
     setMostrarIconosRol(false);
-  };
-
-  const handleMouseEnterPermiso = () => {
-    setMostrarIconosPermiso(true);
-  };
-  const handleMouseLeavePermiso = () => {
-    setMostrarIconosPermiso(false);
   };
 
   return (
@@ -323,21 +234,11 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       </div>
       {/* Modal */}
       {mostrarModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={closeModal}>
-              &times;
-            </span>
-            <label>Nuevo Permiso:</label>
-            <input
-              type="text"
-              placeholder="ej: PROJECT:WRITE"
-              value={nuevoPermiso}
-              onChange={(e) => setNuevoPermiso(e.target.value)}
-            />
-            <button onClick={handleOkButtonClick}>OK</button>
-          </div>
-        </div>
+        <Modal
+          permisos={permisos}
+          setPermisos={setPermisos}
+          setMostrarModal={setMostrarModal}
+        />
       )}
     </div>
   );
