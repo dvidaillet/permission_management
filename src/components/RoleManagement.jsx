@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useCallback, useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 import { removeDuplicates } from "../helpers/utils";
 import { isValidPermission } from "../helpers/validationUtils";
@@ -11,6 +11,8 @@ import {
 
 import "./RoleManagement.css";
 import papeleraIcon from "../papelera.png";
+import Celdas from "./components/Celdas";
+import EncabezadoEntidad from "./components/EncabezadoEntidad";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
@@ -22,14 +24,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   const [nuevoPermiso, setNuevoPermiso] = useState("");
   const [nombreNuevoRole, setNombreNuevoRole] = useState("");
   //states para mostrar los iconos de las celdas
-  const [mostrarIconosEntidad, setMostrarIconosEntidad] = useState(false);
   const [mostrarIconosRol, setMostrarIconosRol] = useState(false);
   const [mostrarIconosPermiso, setMostrarIconosPermiso] = useState(false);
   //states para verificar los check
   const [rolCheked, setRolCheked] = useState(false);
   const [permisoCheked, setPermisoCheked] = useState(false);
-  const [entidadCheked, setEntidadCheked] = useState(false);
-
+  
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
     removeDuplicates(permisos?.map((el) => el.split(":")[0]));
@@ -52,82 +52,23 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       //obtengo cantidad de permisos para cada entidad para establecer ancho de la columna
       const permisosCount = getEntityPermissionCount(entidad);
       return (
-        //establesco ancho de la columna
-        <th
+        <EncabezadoEntidad
           key={i}
-          colSpan={permisosCount}
-          onMouseEnter={() => handleMouseEnter()}
-          onMouseLeave={() => handleMouseLeave()}
-        >
-          {mostrarIconosEntidad ? (
-            <>
-              <input
-                type="checkbox"
-                onChange={() => handleCheckboxChangeEntidad(entidad)}
-              />
-              {capitalizarEntidad(entidad)}
-              <img
-                className="icono-papelera"
-                src={papeleraIcon}
-                onClick={() => borrarEntidad(entidad)}
-              />
-            </>
-          ) : (
-            capitalizarEntidad(entidad)
-          )}
-        </th>
+          entidad={entidad}
+          permisosCount={permisosCount}
+          roles={roles}
+          permisos={permisos}
+          setRoles={setRoles}
+          setPermisos={setPermisos}
+        />
       );
     });
-  };
-
-  const handleCheckboxChangeEntidad = (entidad) => {
-    let updatedRoles = [];
-    if (!entidadCheked) {
-      updatedRoles = (roles) => {
-        const filteredRoles = [...roles].map((rol) => {
-          const filteredPermissions = rol.permissions.filter(
-            (permission) => !permission.startsWith(entidad)
-          );
-
-          return { ...rol, permissions: filteredPermissions };
-        });
-
-        return filteredRoles;
-      };
-    } else {
-      const entityPermissions = permisos.filter((p) => p.startsWith(entidad));
-
-      updatedRoles = (roles) => {
-        const filteredRoles = [...roles].map((rol) => {
-          const filteredPermissions = rol.permissions.filter(
-            (permission) => !permission.startsWith(entidad)
-          );
-
-          return {
-            ...rol,
-            permissions: [...filteredPermissions, ...entityPermissions],
-          };
-        });
-
-        return filteredRoles;
-      };
-    }
-
-    setRoles(updatedRoles);
-    setEntidadCheked(!entidadCheked);
-  };
-
-  const borrarEntidad = (entidad) => {
-    const updatedPermissions = permisos.filter(
-      (permiso) => !permiso.includes(entidad)
-    );
-    setPermisos(updatedPermissions);
   };
 
   const handleCheckboxChangePermiso = (permiso, entidad) => {
     const nombreFull = `${entidad}:${permiso}`;
 
-    if (!permisoCheked) {
+    if (permisoCheked) {
       const updateRoles = roles.map((rol) => {
         const updatePermissions = rol.permissions.filter(
           (permiso) => permiso !== nombreFull
@@ -174,18 +115,23 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
             onMouseLeave={() => handleMouseLeavePermiso()}
           >
             {mostrarIconosPermiso ? (
-              <>
-                <input
-                  type="checkbox"
-                  onChange={() => handleCheckboxChangePermiso(p, entidad)}
-                />
-                {permisoCapitalizado}
-                <img
-                  className="icono-papelera"
-                  src={papeleraIcon}
-                  onClick={() => borrarPermiso(p, entidad)}
-                />
-              </>
+              <div className="celdas">
+                <div>
+                  <input
+                    type="checkbox"
+                    name="ceckbocxPermiso"
+                    onChange={() => handleCheckboxChangePermiso(p, entidad)}
+                  />
+                  {permisoCapitalizado}
+                </div>
+                <div>
+                  <img
+                    className="icono-papelera"
+                    src={papeleraIcon}
+                    onClick={() => borrarPermiso(p, entidad)}
+                  />
+                </div>
+              </div>
             ) : (
               permisoCapitalizado
             )}
@@ -228,6 +174,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       return;
     }
     setPermisos([...permisos, nuevoPermiso]);
+    setNuevoPermiso("");
     closeModal();
   };
   //------------------------------------------
@@ -249,13 +196,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
       return;
     }
 
-    const readPermissions = [...permisos].filter((p) => p.includes("READ"));    
+    const readPermissions = [...permisos].filter((p) => p.includes("READ"));
     const newRole = {
       id: uuidv4(),
       name: nombreNuevoRole,
       permissions: readPermissions,
     };
-    console.log("🚀 - addNewRole - newRole:", newRole)
 
     setRoles([...roles, newRole]);
     setNombreNuevoRole("");
@@ -291,13 +237,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   };
 
   //funciones para manejar los eventos del mouse
-  const handleMouseEnter = () => {
-    setMostrarIconosEntidad(true);
-  };
-  const handleMouseLeave = () => {
-    setMostrarIconosEntidad(false);
-  };
-
   const handleMouseEnterRol = () => {
     setMostrarIconosRol(true);
   };
@@ -313,74 +252,75 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   };
 
   return (
-    <div>
-      <table className="center">
-        <thead>
-          <tr>
-            <th rowSpan="2">Roles</th>
-            {renderEntities()}
-          </tr>
-          <tr>{renderEntitiesPermissions()}</tr>
-        </thead>
-        <tbody>
-          {/* Iterando sobre los roles para crear las filas */}
-          {roles.map((role) => (
-            <tr key={role.id}>
-              <td
-                onMouseEnter={() => handleMouseEnterRol()}
-                onMouseLeave={() => handleMouseLeaveRol()}
-              >
-                {mostrarIconosRol ? (
-                  <>
-                    <input
-                      type="checkbox"
-                      onChange={() => handleCheckboxChangeRol(role)}
-                    />
-                    {capitalizarEntidad(role.name)}
-                    <img
-                      className="icono-papelera"
-                      src={papeleraIcon}
-                      onClick={() => borrarRol(role)}
-                    />
-                  </>
-                ) : (
-                  capitalizarEntidad(role.name)
-                )}
-              </td>
-              {/* Iterar sobre los permisos para crear las celdas*/}
-              {permisosMap.map((p, i) => {
-                const exist = role?.permissions?.includes(p);
-                return (
-                  <td
-                    key={i}
-                    onMouseEnter={() => handleMouseEnterPermiso()}
-                    onMouseLeave={() => handleMouseLeavePermiso()}
-                  >
-                    {exist ? "X" : ""}
-                  </td>
-                );
-              })}
-              <td>
-                <button onClick={openModal}>+</button>
+    <div className="container">
+      <div className="tabla-container">
+        <table className="center">
+          <thead>
+            <tr>
+              <th rowSpan="2">Roles</th>
+              {renderEntities()}
+            </tr>
+            <tr>{renderEntitiesPermissions()}</tr>
+          </thead>
+          <tbody>
+            {/* Iterando sobre los roles para crear las filas */}
+            {roles.map((role) => (
+              <tr key={role.id}>
+                <td
+                  onMouseEnter={() => handleMouseEnterRol()}
+                  onMouseLeave={() => handleMouseLeaveRol()}
+                >
+                  {mostrarIconosRol ? (
+                    <div className="celdas">
+                      <div>
+                        <input
+                          type="checkbox"
+                          name="ceckbocxRol"
+                          onChange={() => handleCheckboxChangeRol(role)}
+                        />
+                        {capitalizarEntidad(role.name)}
+                      </div>
+
+                      <div>
+                        <img
+                          className="icono-papelera"
+                          src={papeleraIcon}
+                          onClick={() => borrarRol(role)}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    capitalizarEntidad(role.name)
+                  )}
+                </td>
+                {/* Iterar sobre los permisos para crear las celdas*/}
+                {permisosMap.map((p, i) => {
+                  const exist = role?.permissions?.includes(p);
+                  return <Celdas key={i} exist={exist} />;
+                })}
+                <td className="tdboton">
+                  <button className="boton" onClick={openModal}>
+                    Add Permission
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {/* adicionando fila para agregar nuevo Rol */}
+            <tr>
+              <td colSpan={permisos.length + 1}>
+                <input
+                  className="addRolInput"
+                  type="text"
+                  placeholder="Add Role"
+                  value={nombreNuevoRole}
+                  onChange={(e) => setNombreNuevoRole(e.target.value)}
+                  onKeyDown={handleEnterPress}
+                />
               </td>
             </tr>
-          ))}
-
-          {/* adicionando fila para agregar nuevo Rol */}
-          <tr>
-            <td colSpan={permisos.length + 1}>
-              <input
-                type="text"
-                placeholder="Add Role"
-                value={nombreNuevoRole}
-                onChange={(e) => setNombreNuevoRole(e.target.value)}
-                onKeyDown={handleEnterPress}
-              />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+          </tbody>
+        </table>
+      </div>
       {/* Modal */}
       {mostrarModal && (
         <div className="modal">

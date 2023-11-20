@@ -10,11 +10,11 @@ td {
   text-align: center;
 }
 
-div {
-  padding-top: 2rem;
+.container {
+  padding-top: 4rem;
   overflow-x: auto;
   overflow-y: auto;
-  width: 90%;
+  width: 80%;
   margin-left: auto;
   margin-right: auto;
 }
@@ -61,17 +61,44 @@ td:first-child {
 
 td,
 th {
-  min-width: 100px; /* Ancho mínimo para las celdas, ajusta según sea necesario */
+  min-width: 150px; /* Ancho mínimo para las celdas, ajusta según sea necesario */
 }
 
 .tabla-container {
   width: 100%;
   overflow: auto;
-  max-height: 300px; /* Altura máxima de la tabla, ajusta según sea necesario */
+  height: 300px;
+  /* //max-height: 300px; Altura máxima de la tabla, ajusta según sea necesario */
 }
 
 .icono-papelera {
   width: 1rem;
   height: 1rem;
   margin-left: 0;
+}
+
+.celdas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 95%;
+}
+
+.tdboton {
+  width: 15px;
+}
+
+.boton{
+  background-color: beige;
+  color: #090909;
+  border: none;
+  font-size: 18px;
+  width: 100%;
+}
+
+
+.addRolInput{
+  width: 100%;
+  text-align: center;
+  margin: auto;
 }
