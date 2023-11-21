@@ -1,8 +1,15 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { capitalizarPermiso } from "../../helpers/capitalizarUtils";
 import papeleraIcon from "../../papelera.png";
 
-const EncabezadoPermizo = ({p,roles, entidad, permisos,setPermisos, setRoles}) => {
+const EncabezadoPermizo = ({
+  p,
+  roles,
+  entidad,
+  permisos,
+  setPermisos,
+  setRoles,
+}) => {
   const [mostrarIconosPermiso, setMostrarIconosPermiso] = useState(false);
   const [permisoCheked, setPermisoCheked] = useState(false);
 
@@ -44,7 +51,7 @@ const EncabezadoPermizo = ({p,roles, entidad, permisos,setPermisos, setRoles}) =
   const borrarPermiso = (permiso, entidad) => {
     const nombreFull = `${entidad}:${permiso}`;
     const updatedPermissions = permisos.filter(
-      (permiso) => !permiso.includes(nombreFull)
+      (permiso) => permiso !== nombreFull
     );
     setPermisos(updatedPermissions);
   };

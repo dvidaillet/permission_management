@@ -65,8 +65,8 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
   const renderEntitiesPermissions = () => {
     const entidades = removeDuplicates(permisos?.map((el) => el.split(":")[0]));
     return entidades.map((entidad) => {
-      const permisos = getEntityPermissions(entidad);
-      return permisos.map((p, i) => {
+      const entidadPermisos = getEntityPermissions(entidad);
+      return entidadPermisos.map((p, i) => {
         return (
           <EncabezadoPermizo
             key={i}
