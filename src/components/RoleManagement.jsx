@@ -128,7 +128,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
         <table className="center">
           <thead>
             <tr>
-              <th className="pimera" rowSpan="2">
+              <th className="primera-columna " rowSpan="2">
                 Roles
               </th>
               {renderEntities()}

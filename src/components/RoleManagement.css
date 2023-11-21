@@ -34,6 +34,7 @@ td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
+  min-width: 150px; /* Ancho mínimo para las celdas, ajusta según sea necesario */
 }
 
 th {
@@ -43,7 +44,7 @@ th {
   z-index: 2;
 }
 
-th:first-child {
+.primera-columna {
   /* Fijar la primera columna */
   position: sticky;
   left: 0;
@@ -52,16 +53,11 @@ th:first-child {
 }
 
 td:first-child {
-  /* Fijar la primera columna */
+  /* Fijar la primera fila */
   position: sticky;
   left: 0;
   z-index: 1;
   background-color: #fff;
-}
-
-td,
-th {
-  min-width: 150px; /* Ancho mínimo para las celdas, ajusta según sea necesario */
 }
 
 .tabla-container {
@@ -88,7 +84,7 @@ th {
   width: 15px;
 }
 
-.boton{
+.boton {
   background-color: beige;
   color: #090909;
   border: none;
@@ -96,8 +92,7 @@ th {
   width: 100%;
 }
 
-
-.addRolInput{
+.addRolInput {
   width: 100%;
   text-align: center;
   margin: auto;

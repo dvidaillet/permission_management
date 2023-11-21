@@ -1,8 +1,5 @@
-import  {  useState } from "react";
-import {
-  capitalizarEntidad
-,
-} from "../../helpers/capitalizarUtils";
+import { useState } from "react";
+import { capitalizarEntidad } from "../../helpers/capitalizarUtils";
 import papeleraIcon from "../../papelera.png";
 
 const EncabezadoEntidad = ({
