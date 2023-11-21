@@ -1,7 +1,5 @@
 import {  useState } from "react";
-
 import { capitalizarPermiso } from "../../helpers/capitalizarUtils";
-
 import papeleraIcon from "../../papelera.png";
 
 const EncabezadoPermizo = ({p,roles, entidad, permisos,setPermisos, setRoles}) => {

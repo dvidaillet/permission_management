@@ -6,7 +6,9 @@ const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
 
   const handleOkButtonClick = () => {
     if (!isValidPermission(nuevoPermiso)) {
+      closeModal();
       setNuevoPermiso("");
+      alert("Formato del permiso incorrecto - ej:EENTIDAD:PERMISO");
       return;
     }
     const existe = permisos.includes(nuevoPermiso);
@@ -20,6 +22,11 @@ const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
     closeModal();
   };
 
+  const handleEnterPress = (e) => {
+    if (e.key === "Enter" && nuevoPermiso.trim() !== "") {
+      handleOkButtonClick();
+    }
+  };
   const closeModal = () => {
     setMostrarModal(false);
   };
@@ -36,6 +43,7 @@ const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
           placeholder="ej: PROJECT:WRITE"
           value={nuevoPermiso}
           onChange={(e) => setNuevoPermiso(e.target.value)}
+          onKeyDown={handleEnterPress}
         />
         <button onClick={handleOkButtonClick}>OK</button>
       </div>
