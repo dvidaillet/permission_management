@@ -4,14 +4,11 @@ import { v4 as uuidv4 } from "uuid";
 
 import { removeDuplicates } from "../helpers/utils";
 
-import { capitalizarEntidad } from "../helpers/capitalizarUtils";
-
 import "./RoleManagement.css";
-import papeleraIcon from "../papelera.png";
-import Celdas from "./components/Celdas";
 import EncabezadoEntidad from "./components/EncabezadoEntidad";
 import EncabezadoPermizo from "./components/EncabezadoPermiso";
 import Modal from "./components/Modal";
+import CeldasRoles from "./components/CeldasRoles";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
@@ -21,10 +18,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nombreNuevoRole, setNombreNuevoRole] = useState("");
-  //states para mostrar los iconos de las celdas
-  const [mostrarIconosRol, setMostrarIconosRol] = useState(false);
-  //states para verificar los check
-  const [rolCheked, setRolCheked] = useState(false);
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
@@ -129,92 +122,31 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     setNombreNuevoRole("");
   };
 
-  const handleCheckboxChangeRol = (rol) => {
-    const updatedRol = {
-      ...rol,
-      permissions: rolCheked ? [] : permisos,
-    };
-
-    const updatedRoles = roles.map((r) =>
-      r.name === rol.name ? updatedRol : r
-    );
-
-    setRolCheked(!rolCheked);
-    setRoles(updatedRoles);
-  };
-
-  //funcion para eliminar un rol
-  const borrarRol = (rol) => {
-    const newRoles = [...roles].filter((r) => r !== rol);
-    setRoles(newRoles);
-  };
-
-  //eventos del modal
-  const openModal = () => {
-    setMostrarModal(true);
-  };
-
-  //funciones para manejar los eventos del mouse
-  const handleMouseEnterRol = () => {
-    setMostrarIconosRol(true);
-  };
-  const handleMouseLeaveRol = () => {
-    setMostrarIconosRol(false);
-  };
-
   return (
     <div className="container">
       <div className="tabla-container">
         <table className="center">
           <thead>
             <tr>
-              <th rowSpan="2">Roles</th>
+              <th className="pimera" rowSpan="2">
+                Roles
+              </th>
               {renderEntities()}
             </tr>
             <tr>{renderEntitiesPermissions()}</tr>
           </thead>
           <tbody>
             {/* Iterando sobre los roles para crear las filas */}
-            {roles.map((role) => (
-              <tr key={role.id}>
-                <td
-                  onMouseEnter={() => handleMouseEnterRol()}
-                  onMouseLeave={() => handleMouseLeaveRol()}
-                >
-                  {mostrarIconosRol ? (
-                    <div className="celdas">
-                      <div>
-                        <input
-                          type="checkbox"
-                          name="ceckbocxRol"
-                          onChange={() => handleCheckboxChangeRol(role)}
-                        />
-                        {capitalizarEntidad(role.name)}
-                      </div>
-
-                      <div>
-                        <img
-                          className="icono-papelera"
-                          src={papeleraIcon}
-                          onClick={() => borrarRol(role)}
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    capitalizarEntidad(role.name)
-                  )}
-                </td>
-                {/* Iterar sobre los permisos para crear las celdas*/}
-                {permisosMap.map((p, i) => {
-                  const exist = role?.permissions?.includes(p);
-                  return <Celdas key={i} exist={exist} />;
-                })}
-                <td className="tdboton">
-                  <button className="boton" onClick={openModal}>
-                    Add Permission
-                  </button>
-                </td>
-              </tr>
+            {roles.map((rol) => (
+              <CeldasRoles
+                key={rol.id}
+                rol={rol}
+                roles={roles}
+                permisos={permisos}
+                setRoles={setRoles}
+                setMostrarModal={setMostrarModal}
+                permisosMap={permisosMap}
+              />
             ))}
             {/* adicionando fila para agregar nuevo Rol */}
             <tr>
