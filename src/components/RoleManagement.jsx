@@ -122,6 +122,10 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     setNombreNuevoRole("");
   };
 
+  const handleSaveClick = () => {
+    console.log(roles);
+  };
+
   return (
     <div className="container">
       <div className="tabla-container">
@@ -163,6 +167,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
             </tr>
           </tbody>
         </table>
+        <button onClick={handleSaveClick}>Salvar</button>
       </div>
       {/* Modal */}
       {mostrarModal && (

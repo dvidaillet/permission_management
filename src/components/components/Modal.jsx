@@ -4,6 +4,10 @@ import { isValidPermission } from "../../helpers/validationUtils";
 const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
   const [nuevoPermiso, setNuevoPermiso] = useState("");
 
+  const enviar = () => {
+    console.log(permisos);
+  };
+
   const handleOkButtonClick = () => {
     if (!isValidPermission(nuevoPermiso)) {
       closeModal();
@@ -32,7 +36,7 @@ const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
   };
 
   return (
-    <div className="modal">
+    <form onSubmit={enviar} className="modal">
       <div className="modal-content">
         <span className="close" onClick={closeModal}>
           &times;
@@ -47,7 +51,7 @@ const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
         />
         <button onClick={handleOkButtonClick}>OK</button>
       </div>
-    </div>
+    </form>
   );
 };
 
