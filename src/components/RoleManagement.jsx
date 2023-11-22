@@ -174,6 +174,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
                 <input
                   className="addRolInput"
                   type="text"
+                  name="nuevoRolInput"
                   placeholder="Add Role"
                   value={nombreNuevoRole}
                   onChange={(e) => setNombreNuevoRole(e.target.value)}

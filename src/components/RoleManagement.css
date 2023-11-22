@@ -1,3 +1,9 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
 table,
 th,
 td {
@@ -13,11 +19,7 @@ td {
   margin-left: auto;
   margin-right: auto;
 }
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
+
 
 table {
   width: 95%;
@@ -62,12 +64,9 @@ td:first-child {
   z-index: 1;  
 }
 
-
-
 .encabezado-roles{
   background-color: #d3d0d0;
 }
-
 
 .tabla-container {
   width: 100%;
@@ -78,8 +77,7 @@ td:first-child {
 
 .icono-papelera {
   width: 1rem;
-  height: 1rem;
-  margin-left: 0;
+  height: 1rem; 
 }
 
 .celda {
@@ -97,27 +95,12 @@ td:first-child {
   text-align: center;
 }
 
-.tdboton {
-  width: 15px;
-}
-
-.boton {
-  background-color: beige;
-  color: #090909;
-  border: none;
-  font-size: 18px;
-  width: 100%;
-}
-
 .addRolInput {
   width: 100%;
   height: 1.3rem;
   text-align: center;
   margin: auto;
   border: none;
-}
-h4.addRolInput{
-  color: #5cb85c;
 }
 h4{
   color: tomato;
@@ -133,6 +116,7 @@ h4{
   display: flex;
   justify-content: space-between;
 }
+
 .boton-salvar {
   background-color: #5cb85c;
   color: white;
@@ -153,15 +137,13 @@ h4{
   width: 100%;
 }
 
-/* The Modal (background) */
 .modal {
-  width: 60%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
+  width: 60%; 
+  height: 100%; 
+  overflow: auto; 
   margin: auto;
 }
 
-/* Modal Content */
 .modal-content {
   position: relative;
   background-color: #fefefe;
@@ -199,7 +181,6 @@ h4{
   }
 }
 
-/* The Close Button */
 .close {
   color: white;
   float: right;
@@ -236,26 +217,25 @@ h4{
   justify-content: space-between;
 }
 
+.boton-ok-modal,
+.boton-cancel-modal {
+  width: 45%;
+  height: 2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
 .boton-ok-modal {
   background-color: #5cb85c;
   color: white;
-  text-align: center;
-  width: 45%;
-  height: 2rem;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: bold;
+  text-align: center; 
 }
 
 .boton-cancel-modal {
   background-color: tomato;
   color: white;
-  text-align: center;
-  width: 45%;
-  height: 2rem;
-  font-size: 1.1rem;
-  cursor: pointer;
-  font-weight: bold;
+  text-align: center; 
 }
 
 .input-modal {
@@ -268,6 +248,6 @@ h4{
   height: 2rem;
   margin: 0.5rem auto;
   text-align: center;
-  color: red;
+  color: tomato;
 }
 

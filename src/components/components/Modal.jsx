@@ -55,6 +55,7 @@ const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
           <input
             type="text"
             className="input-modal"
+            name="nuevoPermisoNombre"
             placeholder="ej: PROJECT:WRITE"
             value={nuevoPermiso}
             onChange={(e) => setNuevoPermiso(e.target.value)}

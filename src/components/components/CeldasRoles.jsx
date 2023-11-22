@@ -55,7 +55,7 @@ const CeldasRoles = ({
             <div>
               <input
                 type="checkbox"
-                defaultChecked={rolCheked}
+                defaultChecked={rolCheked}                
                 name="ceckbocxRol"
                 onChange={() => handleCheckboxChangeRol(rol)}
               />
