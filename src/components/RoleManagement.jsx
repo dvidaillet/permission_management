@@ -110,10 +110,13 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
     if (existe || !isValidRoleName(nombreNuevoRole)) {
       setRolIncorrecto(true);
-      setNombreNuevoRole("");
+      setTimeout(() => {
+        setRolIncorrecto(false);
+        setNombreNuevoRole("");
+      }, 3000);
       return;
     }
-    setRolIncorrecto(false);
+
     const readPermissions = [...permisos].filter((p) => p.includes("READ"));
     const newRole = {
       id: uuidv4(),
