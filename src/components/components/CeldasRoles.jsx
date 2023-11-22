@@ -17,11 +17,12 @@ const CeldasRoles = ({
   const [rolCheked, setRolCheked] = useState(false);
 
   //funcion para eliminar un rol
-  const borrarRol = async (rol) => {    
+  const borrarRol = async (rol) => {
+    const id = rol.id;
     const newRoles = [...roles].filter((r) => r !== rol);
     setRoles(newRoles);
     try {
-      await axiosRequest.delete("", rol.id);
+      await axiosRequest.delete("", id);
     } catch (error) {
       console.log(error.message);
     }

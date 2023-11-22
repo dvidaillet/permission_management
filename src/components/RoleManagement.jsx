@@ -104,7 +104,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     }
   };
 
-  const addNewRole = async() => {
+  const addNewRole = async () => {
     const existe = roles.some(
       (rol) => rol.name.toLowerCase() === nombreNuevoRole.toLowerCase()
     );
@@ -128,15 +128,15 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     setRoles([...roles, newRole]);
     setNombreNuevoRole("");
     try {
-      await axiosRequest.post('',newRole)
+      await axiosRequest.post("", newRole);
     } catch (error) {
-      console.log(error.message)
+      console.log(error.message);
     }
-    
   };
 
   const handleSaveClick = () => {
     console.log(roles);
+    return roles;
   };
 
   return (
