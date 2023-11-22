@@ -5,12 +5,10 @@ const Celdas = ({ exist, isUltimaColumna, setMostrarModal }) => {
       setMostrarModal(true);
     }
   };
+
+  const cellClassName = isUltimaColumna ? "ultima celda" : "celda";
   return (
-    
-    <td
-      className={isUltimaColumna ? "ultima celda" : "celda"}
-      onClick={openModal}
-    >
+    <td className={cellClassName} onClick={openModal}>
       {exist ? "X" : ""}
     </td>
   );
