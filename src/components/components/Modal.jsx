@@ -7,17 +7,18 @@ const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
 
   const handleOkButtonClick = () => {
     if (!isValidPermission(nuevoPermiso)) {
-      //closeModal();
       setPermisoNoValido(true);
       setNuevoPermiso("");
       return;
     }
+
     const existe = permisos.includes(nuevoPermiso);
     if (existe) {
       alert("Este permiso ya existe");
       setNuevoPermiso("");
       return;
     }
+
     setPermisos([...permisos, nuevoPermiso]);
     setNuevoPermiso("");
     closeModal();
@@ -46,11 +47,11 @@ const Modal = ({ permisos, setPermisos, setMostrarModal }) => {
           </span>
           <h2>Agregue un nuevo Permiso:</h2>
         </div>
-        {permisoNoValido ? (
+        {permisoNoValido && (
           <div className="herror">
             <h3>Formato del permiso incorrecto - Ejemplo: ENTIDAD:PERMISO</h3>
           </div>
-        ) : null}
+        )}
         <div className="modal-body">
           <input
             type="text"
