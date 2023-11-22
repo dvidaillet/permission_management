@@ -16,12 +16,12 @@ const EncabezadoEntidad = ({
   const handleMouseLeave = () => setMostrarIconosEntidad(false);
 
   const handleCheckboxChangeEntidad = () => {
-    const entityPermissions = permisos.filter((p) => p.startsWith(entidad));
+    const entityPermissions = permisos.filter((p) => p.startsWith(`${entidad}:`));
 
     const updatedRoles = (roles) =>
       roles.map((rol) => {
         const filteredPermissions = rol.permissions.filter(
-          (permission) => !permission.startsWith(entidad)
+          (permission) => !permission.startsWith(`${entidad}:`)
         );
 
         return {
@@ -35,10 +35,10 @@ const EncabezadoEntidad = ({
     setRoles(updatedRoles);
     setEntidadCheked(!entidadCheked);
   };
-
+ 
   const borrarEntidad = () => {
     const updatedPermissions = permisos.filter(
-      (permiso) => !permiso.includes(entidad)
+      (permiso) => !permiso.startsWith(`${entidad}:`)
     );
     setPermisos(updatedPermissions);
   };
