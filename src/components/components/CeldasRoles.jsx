@@ -11,10 +11,10 @@ const CeldasRoles = ({
   setRoles,
   setMostrarModal,
 }) => {
-  //states para mostrar los iconos de las celdas
+  //states
   const [mostrarIconosRol, setMostrarIconosRol] = useState(false);
-  //states para verificar los check
   const [rolCheked, setRolCheked] = useState(false);
+
   //funcion para eliminar un rol
   const borrarRol = (rol) => {
     const newRoles = [...roles].filter((r) => r !== rol);
@@ -43,22 +43,19 @@ const CeldasRoles = ({
     setMostrarIconosRol(false);
   };
 
-  //eventos del modal
-  const openModal = () => {
-    setMostrarModal(true);
-  };
-
   return (
     <tr key={rol.id}>
       <td
+        className="celdas encabezado-roles"
         onMouseEnter={() => handleMouseEnterRol()}
         onMouseLeave={() => handleMouseLeaveRol()}
       >
         {mostrarIconosRol ? (
-          <div className="celdas">
+          <div className="celdas encabezado-roles">
             <div>
               <input
                 type="checkbox"
+                defaultChecked={rolCheked}
                 name="ceckbocxRol"
                 onChange={() => handleCheckboxChangeRol(rol)}
               />
@@ -81,13 +78,16 @@ const CeldasRoles = ({
       {/* Iterar sobre los permisos para crear las celdas*/}
       {permisosMap.map((p, i) => {
         const exist = rol?.permissions?.includes(p);
-        return <Celdas key={i} exist={exist} />;
+        const isUltimaColumna = i === permisosMap.length - 1;
+        return (
+          <Celdas
+            key={i}
+            exist={exist}
+            isUltimaColumna={isUltimaColumna}
+            setMostrarModal={setMostrarModal}
+          />
+        );
       })}
-      <td className="tdboton">
-        <button className="boton" onClick={openModal}>
-          Add Permission
-        </button>
-      </td>
     </tr>
   );
 };

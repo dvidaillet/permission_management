@@ -67,6 +67,7 @@ const EncabezadoEntidad = ({
   return (
     <th
       colSpan={permisosCount}
+      className="encabezado-entidad"
       onMouseEnter={() => handleMouseEnter()}
       onMouseLeave={() => handleMouseLeave()}
     >
@@ -76,6 +77,7 @@ const EncabezadoEntidad = ({
             <input
               type="checkbox"
               name="ceckbocxEntidad"
+              defaultChecked={entidadCheked}
               onChange={() => handleCheckboxChangeEntidad(entidad)}
             />
             {capitalizarEntidad(entidad)}

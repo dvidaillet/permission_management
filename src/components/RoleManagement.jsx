@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { removeDuplicates } from "../helpers/utils";
+import { isValidRoleName } from "../helpers/validationUtils";
 
 import "./RoleManagement.css";
 import EncabezadoEntidad from "./components/EncabezadoEntidad";
@@ -18,6 +19,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nombreNuevoRole, setNombreNuevoRole] = useState("");
+  const [rolIncorrecto, setRolIncorrecto] = useState(false);
 
   //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
@@ -105,12 +107,13 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     const existe = roles.some(
       (rol) => rol.name.toLowerCase() === nombreNuevoRole.toLowerCase()
     );
-    if (existe) {
-      alert("Ya existe un rol con este nombre");
+
+    if (existe || !isValidRoleName(nombreNuevoRole)) {
+      setRolIncorrecto(true);
       setNombreNuevoRole("");
       return;
     }
-
+    setRolIncorrecto(false);
     const readPermissions = [...permisos].filter((p) => p.includes("READ"));
     const newRole = {
       id: uuidv4(),
@@ -139,7 +142,17 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
             </tr>
             <tr>{renderEntitiesPermissions()}</tr>
           </thead>
+
           <tbody>
+            {roles.length === 0 ? (
+              <tr>
+                <td colSpan={permisos.length + 1}>
+                  <h4 className="addRolInput">
+                    No existen roles guardados en base de datos{" "}
+                  </h4>
+                </td>
+              </tr>
+            ) : null}
             {/* Iterando sobre los roles para crear las filas */}
             {roles.map((rol) => (
               <CeldasRoles
@@ -167,8 +180,19 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
             </tr>
           </tbody>
         </table>
-        <button onClick={handleSaveClick}>Salvar</button>
       </div>
+
+      <div className="buton-container">
+        <button className="boton-salvar" onClick={handleSaveClick}>
+          Save
+        </button>
+        {rolIncorrecto ? (
+          <h4 rowSpan={permisos.length - 1}>
+            El nombre del rol ya existe o tiene un formato incorrecto
+          </h4>
+        ) : null}
+      </div>
+
       {/* Modal */}
       {mostrarModal && (
         <Modal

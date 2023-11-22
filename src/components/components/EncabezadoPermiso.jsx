@@ -59,6 +59,7 @@ const EncabezadoPermizo = ({
   const permisoCapitalizado = capitalizarPermiso(p);
   return (
     <th
+    className="encabezado-Permiso"
       onMouseEnter={() => handleMouseEnterPermiso()}
       onMouseLeave={() => handleMouseLeavePermiso()}
     >
@@ -68,6 +69,7 @@ const EncabezadoPermizo = ({
             <input
               type="checkbox"
               name="ceckbocxPermiso"
+              defaultChecked={permisoCheked}
               onChange={() => handleCheckboxChangePermiso(p, entidad)}
             />
             {permisoCapitalizado}
