@@ -2,6 +2,7 @@ import { useState } from "react";
 import Celdas from "./Celdas";
 import { capitalizarEntidad } from "../../helpers/capitalizarUtils";
 import papeleraIcon from "../../papelera.png";
+import axiosRequest from "../AxiosRole";
 
 const CeldasRoles = ({
   rol,
@@ -16,12 +17,17 @@ const CeldasRoles = ({
   const [rolCheked, setRolCheked] = useState(false);
 
   //funcion para eliminar un rol
-  const borrarRol = (rol) => {
+  const borrarRol = async (rol) => {    
     const newRoles = [...roles].filter((r) => r !== rol);
     setRoles(newRoles);
+    try {
+      await axiosRequest.delete("", rol.id);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
-  const handleCheckboxChangeRol = (rol) => {
+  const handleCheckboxChangeRol = async (rol) => {
     const updatedRol = {
       ...rol,
       permissions: rolCheked ? [] : permisos,
@@ -33,6 +39,12 @@ const CeldasRoles = ({
 
     setRolCheked(!rolCheked);
     setRoles(updatedRoles);
+
+    try {
+      await axiosRequest.put("", updatedRol);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   //funciones para manejar los eventos del mouse
@@ -55,7 +67,7 @@ const CeldasRoles = ({
             <div>
               <input
                 type="checkbox"
-                defaultChecked={rolCheked}                
+                defaultChecked={rolCheked}
                 name="ceckbocxRol"
                 onChange={() => handleCheckboxChangeRol(rol)}
               />

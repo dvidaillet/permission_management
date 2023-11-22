@@ -10,6 +10,7 @@ import EncabezadoEntidad from "./components/EncabezadoEntidad";
 import EncabezadoPermizo from "./components/EncabezadoPermiso";
 import Modal from "./components/Modal";
 import CeldasRoles from "./components/CeldasRoles";
+import axiosRequest from "./AxiosRole";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
   //estados iniciales del compoenente
@@ -103,7 +104,7 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     }
   };
 
-  const addNewRole = (e) => {
+  const addNewRole = async() => {
     const existe = roles.some(
       (rol) => rol.name.toLowerCase() === nombreNuevoRole.toLowerCase()
     );
@@ -126,6 +127,12 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
 
     setRoles([...roles, newRole]);
     setNombreNuevoRole("");
+    try {
+      await axiosRequest.post('',newRole)
+    } catch (error) {
+      console.log(error.message)
+    }
+    
   };
 
   const handleSaveClick = () => {

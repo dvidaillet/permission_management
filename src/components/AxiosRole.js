@@ -1,8 +1,11 @@
 import axios from "axios";
 
-const request = axios.create({
-  baseURL: process.env.PUBLIC_URL, //url base de tu api.
+const baseURL = process.env.REACT_APP_API_URL
+console.log("🚀 - baseURL:", baseURL)
+const axiosRequest = axios.create({
+  baseURL, //url base de tu api.
   headers: { "Content-Type": "application/json" }, //Añadimos las cabeceras.
 });
 
-export default request;
+
+export default axiosRequest;
