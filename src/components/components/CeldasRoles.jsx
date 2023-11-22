@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Celdas from "./Celdas";
 import { capitalizarEntidad } from "../../helpers/capitalizarUtils";
 import papeleraIcon from "../../papelera.png";
@@ -12,14 +12,20 @@ const CeldasRoles = ({
   setRoles,
   setMostrarModal,
 }) => {
-  //states
   const [mostrarIconosRol, setMostrarIconosRol] = useState(false);
   const [rolCheked, setRolCheked] = useState(false);
 
-  //funcion para eliminar un rol
-  const borrarRol = async (rol) => {
+  const handleMouseEnterRol = () => {
+    setMostrarIconosRol(true);
+  };
+
+  const handleMouseLeaveRol = () => {
+    setMostrarIconosRol(false);
+  };
+
+  const borrarRol = async () => {
     const id = rol.id;
-    const newRoles = [...roles].filter((r) => r !== rol);
+    const newRoles = roles.filter((r) => r !== rol);
     setRoles(newRoles);
     try {
       await axiosRequest.delete("", id);
@@ -28,7 +34,7 @@ const CeldasRoles = ({
     }
   };
 
-  const handleCheckboxChangeRol = async (rol) => {
+  const handleCheckboxChangeRol = async () => {
     const updatedRol = {
       ...rol,
       permissions: rolCheked ? [] : permisos,
@@ -48,20 +54,12 @@ const CeldasRoles = ({
     }
   };
 
-  //funciones para manejar los eventos del mouse
-  const handleMouseEnterRol = () => {
-    setMostrarIconosRol(true);
-  };
-  const handleMouseLeaveRol = () => {
-    setMostrarIconosRol(false);
-  };
-
   return (
     <tr key={rol.id}>
       <td
-        className="celdas encabezado-roles"
-        onMouseEnter={() => handleMouseEnterRol()}
-        onMouseLeave={() => handleMouseLeaveRol()}
+        className={`celdas encabezado-roles`}
+        onMouseEnter={handleMouseEnterRol}
+        onMouseLeave={handleMouseLeaveRol}
       >
         {mostrarIconosRol ? (
           <div className="celdas encabezado-roles">
@@ -70,17 +68,16 @@ const CeldasRoles = ({
                 type="checkbox"
                 defaultChecked={rolCheked}
                 name="ceckbocxRol"
-                onChange={() => handleCheckboxChangeRol(rol)}
+                onChange={handleCheckboxChangeRol}
               />
               {capitalizarEntidad(rol.name)}
             </div>
-
             <div>
               <img
                 className="icono-papelera"
                 src={papeleraIcon}
                 alt="papelera"
-                onClick={() => borrarRol(rol)}
+                onClick={borrarRol}
               />
             </div>
           </div>
@@ -88,7 +85,6 @@ const CeldasRoles = ({
           capitalizarEntidad(rol.name)
         )}
       </td>
-      {/* Iterar sobre los permisos para crear las celdas*/}
       {permisosMap.map((p, i) => {
         const exist = rol?.permissions?.includes(p);
         const isUltimaColumna = i === permisosMap.length - 1;
