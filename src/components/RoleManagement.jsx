@@ -13,79 +13,58 @@ import CeldasRoles from "./components/CeldasRoles";
 import axiosRequest from "./AxiosRole";
 
 const RolesComponent = ({ initialRoles, initialPermissions }) => {
-  //estados iniciales del compoenente
   const [roles, setRoles] = useState(initialRoles);
   const [permisos, setPermisos] = useState(initialPermissions);
   const [permisosMap, setPermisosMap] = useState([]);
-
   const [mostrarModal, setMostrarModal] = useState(false);
   const [nombreNuevoRole, setNombreNuevoRole] = useState("");
   const [rolIncorrecto, setRolIncorrecto] = useState(false);
 
-  //Funcion para crear un arreglo con los nombres de las entidades
   const getEntities = () =>
     removeDuplicates(permisos?.map((el) => el.split(":")[0]));
 
-  // funcion para contar la cantidad de permisos de una entidad especificada
   const getEntityPermissionCount = (entity) =>
     permisos.filter((el) => el?.startsWith(`${entity}:`)).length;
 
-  //funcion para obtener los permisos por entidad
   const getEntityPermissions = (entidad) =>
     permisos
       .filter((el) => el.startsWith(`${entidad}:`))
       .map((el) => el.split(":")[1]);
 
-  //funcion para renderizar un ecabezado con los nombres de las entidades
-  const renderEntities = () => {
-    const entidades = getEntities();
+  const renderEntities = () =>
+    getEntities().map((entidad, i) => (
+      <EncabezadoEntidad
+        key={i}
+        entidad={entidad}
+        permisosCount={getEntityPermissionCount(entidad)}
+        roles={roles}
+        permisos={permisos}
+        setRoles={setRoles}
+        setPermisos={setPermisos}
+      />
+    ));
 
-    return entidades.map((entidad, i) => {
-      //obtengo cantidad de permisos para cada entidad para establecer ancho de la columna
-      const permisosCount = getEntityPermissionCount(entidad);
-      return (
-        <EncabezadoEntidad
+  const renderEntitiesPermissions = () =>
+    getEntities().map((entidad) =>
+      getEntityPermissions(entidad).map((p, i) => (
+        <EncabezadoPermizo
           key={i}
-          entidad={entidad}
-          permisosCount={permisosCount}
+          p={p}
           roles={roles}
+          entidad={entidad}
           permisos={permisos}
           setRoles={setRoles}
           setPermisos={setPermisos}
         />
-      );
-    });
-  };
-
-  //funcion para mostrar los permisos en los encabezados por entidad
-  const renderEntitiesPermissions = () => {
-    const entidades = removeDuplicates(permisos?.map((el) => el.split(":")[0]));
-    return entidades.map((entidad) => {
-      const entidadPermisos = getEntityPermissions(entidad);
-      return entidadPermisos.map((p, i) => {
-        return (
-          <EncabezadoPermizo
-            key={i}
-            p={p}
-            roles={roles}
-            entidad={entidad}
-            permisos={permisos}
-            setRoles={setRoles}
-            setPermisos={setPermisos}
-          />
-        );
-      });
-    });
-  };
+      ))
+    );
 
   const getPermissionsMap = useCallback(() => {
     const pMap = [];
     const entities = getEntities();
     entities.forEach((entity) => {
       const permissions = getEntityPermissions(entity);
-      permissions.forEach((p) => {
-        pMap.push(`${entity}:${p}`);
-      });
+      permissions.forEach((p) => pMap.push(`${entity}:${p}`));
     });
     return pMap;
   }, [roles, permisos]);
@@ -97,7 +76,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
     }
   }, [roles, getPermissionsMap, permisos]);
 
-  //implementa lagica para agregar un nuevo rol
   const handleEnterPress = (e) => {
     if (e.key === "Enter" && nombreNuevoRole.trim() !== "") {
       addNewRole();
@@ -163,7 +141,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
                 </td>
               </tr>
             ) : null}
-            {/* Iterando sobre los roles para crear las filas */}
             {roles.map((rol) => (
               <CeldasRoles
                 key={rol.id}
@@ -175,7 +152,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
                 permisosMap={permisosMap}
               />
             ))}
-            {/* adicionando fila para agregar nuevo Rol */}
             <tr>
               <td colSpan={permisos.length + 1}>
                 <input
@@ -204,7 +180,6 @@ const RolesComponent = ({ initialRoles, initialPermissions }) => {
         ) : null}
       </div>
 
-      {/* Modal */}
       {mostrarModal && (
         <Modal
           permisos={permisos}
